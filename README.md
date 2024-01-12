@@ -24,7 +24,7 @@ The Decentralized Voting System leverages Ethereum blockchain technology to crea
 
 ### Installation
 1. Clone the repository:
-    ```git clone git@github.com:web3technologies/decentralized_voting_system.git```
+    ```git clone https://github.com/web3technologies/decentralized_voting_system.git```
 
 2. Install Foundry:
     ```
