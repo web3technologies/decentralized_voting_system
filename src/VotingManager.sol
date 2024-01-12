@@ -1,27 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import {VotingInstance} from "./VotingInstance.sol";
 
-import { VotingInstance } from "./VotingInstance.sol";
-
-
-contract VotingSystem {
-
+contract VotingManager {
     address private owner;
 
     uint256 public votingInstanceCount;
 
     VotingInstance[] votingInstances;
 
-    constructor(){
+    constructor() {
         owner = msg.sender;
     }
 
-
-    function createNewVotingInstance  (string memory _subject) public {
+    function createNewVotingInstance(string memory _subject) public {
         votingInstances.push(new VotingInstance(_subject));
-        votingInstanceCount ++;
+        votingInstanceCount++;
     }
-
-
 }

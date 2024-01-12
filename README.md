@@ -1,66 +1,59 @@
-## Foundry
+# Decentralized Voting System
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+## Overview
+The Decentralized Voting System leverages Ethereum blockchain technology to create a secure, transparent, and immutable environment for conducting various types of votes and polls. With smart contracts at its core, this system ensures the integrity and confidentiality of the voting process.
 
-Foundry consists of:
+## Features
+- **Decentralized Voting**: Built on Ethereum for a secure and tamper-proof voting experience.
+- **Voting Manager Contract**: Manages the creation and lifecycle of individual voting instances (`VotingInstance`).
+- **Voting Instances**: Represents distinct votes or polls, each with their own set of candidates and voting logic.
+- **Transparency and Anonymity**: Balances transparent voting results with voter privacy.
+- **Versatile Voting Scenarios**: Suitable for a wide range of voting applications.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## How It Works
+1. **Voting Manager**: A master contract that deploys and oversees `VotingInstance` contracts.
+2. **Creating Votes**: Authorized users can initiate new voting instances through the Voting Manager.
+3. **Voting Process**: Voters participate in active polls, casting votes for their preferred options.
+4. **Results**: Vote outcomes are transparently tallied and published.
 
-## Documentation
+## Getting Started
+### Prerequisites
+- [Foundry](https://github.com/foundry-rs/foundry)
+- [Node.js](https://nodejs.org/)
+- [MetaMask](https://metamask.io/)
 
-https://book.getfoundry.sh/
+### Installation
+1. Clone the repository:
+    git clone [repository-url]
 
-## Usage
+2. Install Foundry:
+    ```
+    curl -L https://foundry.paradigm.xyz | bash
+    foundryup
+    ```
 
-### Build
+### Deployment
+1. Compile the smart contracts:
+```forge build```
 
-```shell
-$ forge build
-```
+2. Deploy the contracts to a local testnet (like Hardhat or Ganache):
+```forge test --fork-url http://localhost:8545```
 
-### Test
+### Interacting with the Contract
+Interact with the deployed contracts using Foundry's `cast` tool, or integrate with a frontend using Web3.js.
 
-```shell
-$ forge test
-```
+## Testing
+Run the test suite:
+```forge test```
 
-### Format
+## Contributing
+We welcome contributions! Please see our [contribution guidelines](CONTRIBUTING.md) for details.
 
-```shell
-$ forge fmt
-```
+## License
+This project is under the [MIT License](LICENSE).
 
-### Gas Snapshots
+## Acknowledgements
+- Ethereum Community
+- Foundry
+- Solidity
 
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
