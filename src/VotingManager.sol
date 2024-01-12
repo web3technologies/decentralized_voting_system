@@ -8,14 +8,21 @@ contract VotingManager {
 
     uint256 public votingInstanceCount;
 
-    VotingInstance[] votingInstances;
+    VotingInstance[] public votingInstances;
+
+    struct VotingObject{
+        uint256 id;
+        VotingInstance votingInstance;
+    }
 
     constructor() {
         owner = msg.sender;
     }
 
-    function createNewVotingInstance(string memory _subject) public {
-        votingInstances.push(new VotingInstance(_subject));
+    function createNewVotingInstance(string memory _subject) public returns (address){
+        VotingInstance votingInstance = new VotingInstance(_subject);
+        votingInstances.push(votingInstance);
         votingInstanceCount++;
+        return address(votingInstance);
     }
 }
