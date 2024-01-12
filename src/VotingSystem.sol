@@ -2,36 +2,26 @@
 pragma solidity ^0.8.19;
 
 
+import { VotingInstance } from "./VotingInstance.sol";
+
+
 contract VotingSystem {
 
-    struct Candidate {
-        uint id;
-        string name;
-        uint voteCount;
-    }
-    mapping(address => bool) public voters;
-    mapping(uint => Candidate) public candidates;
+    address private owner;
 
-    uint public candidatesCount;
+    uint256 public votingInstanceCount;
 
-    constructor() {
-        addCandidate("Alice");
-        addCandidate("Bob");
+    VotingInstance[] votingInstances;
+
+    constructor(){
+        owner = msg.sender;
     }
 
-    function addCandidate(string memory _name) private {
-        candidatesCount ++;
-        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+
+    function createNewVotingInstance  (string memory _subject) public {
+        votingInstances.push(new VotingInstance(_subject));
+        votingInstanceCount ++;
     }
 
-    function vote(uint _candidateId) public {
-        require(!voters[msg.sender], "You have already voted.");
-        require(_candidateId > 0 && _candidateId <= candidatesCount, "Invalid candidate to vote for.");
-        voters[msg.sender] = true;
-        candidates[_candidateId].voteCount ++;
-        emit votedEvent(_candidateId);
-    }
-    event votedEvent (
-        uint indexed _candidateId
-    );
+
 }
