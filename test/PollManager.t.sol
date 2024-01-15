@@ -24,10 +24,9 @@ contract PollManagerTest is Test {
         assertEq(pollManager.owner(), msg.sender);
     }
 
-    // must use the --fork-url
-    // function testPriceFeedVersionIsAccurate() public {
-    //     uint256 version = pollManager.getVersion();
-    //     assertEq(version, 4);
-    // }
+    function testPriceFeedVersionIsAccurate() public {
+        uint256 version = pollManager.getVersion();
+        assertEq(version, 4);
+    }
 
 }

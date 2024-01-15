@@ -35,6 +35,10 @@ contract PollManager {
         s_priceFeed = AggregatorV3Interface(_aggregatorV3Address);
     }
 
+    function getVersion() public view returns (uint256){
+        return s_priceFeed.version();
+    }
+
     function createNewPollingInstance(string calldata _pollSubject, uint256 _expirationDate, string[] memory pollOptions) public payable returns (address){
         require(msg.value.getConversionRate(s_priceFeed) >= minimumPollCreationUsd, "didnt send enough eth");
         require(pollOptions.length <= 4, "Poll options must not be longer than 4");
