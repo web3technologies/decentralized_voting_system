@@ -19,7 +19,7 @@ contract PollManager {
     using PriceConverter for uint256;
 
     // vars
-    address private owner;
+    address public owner;
     uint256 public pollingInstanceCount;
 
     // data structures
