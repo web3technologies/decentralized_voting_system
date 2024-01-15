@@ -14,16 +14,16 @@ contract PollInstance {
     // vars
     string public voteSubject;
     uint256 public pollCount;
+    uint256 public voteCount;
 
     // data structures
     mapping(address => bool) public voters;
+    mapping(uint256 => address[]) public pollVoters;
     mapping(uint256 => PollOption) public pollOptions;
 
     struct PollOption {
         uint256 id;
         string option;
-        uint256 voteCount;
-        mapping(address => bool) voters;
     }
 
     // constants
@@ -41,7 +41,6 @@ contract PollInstance {
             PollOption storage pollOption = pollOptions[idx];
             pollOption.id = idx;
             pollOption.option = _pollOptions[idx];
-            pollOption.voteCount = 0;
             pollCount ++;
         }
     }
@@ -49,22 +48,20 @@ contract PollInstance {
     function vote(uint256 _pollId) public payable{
         require(msg.value.getConversionRate(s_priceFeed) >= VOTE_PRICE_USD, "didnt send enough eth");
         require(!voters[msg.sender], "You have already voted.");
-        PollOption storage pollOption = pollOptions[_pollId];
         require(_pollId <= pollCount, "Invalid poll option.");
-        pollOption.voters[msg.sender] = true;
-        voters[msg.sender] = true;
-        pollOption.voteCount++;
+        pollVoters[_pollId].push(msg.sender);
+        voteCount ++;
         emit votedEvent(_pollId, msg.sender);
     }
 
-    function getLeadingPoll() public view returns(memory PollOption){
-        PollOption memory leadingPollOption;
-        for (uint256 idx = 0; idx < pollCount; idx++){
-            if(pollOptions[idx].voteCount > leadingPollOption.voteCount){
-                leadingPollOption = pollOptions[idx];
+    function getLeadingPollId() public view returns(uint256){
+        uint256 leadingPollOptionId = 0;
+        for (uint256 idx = 1; idx < pollCount; idx++){
+            if (pollVoters[idx].length > pollVoters[leadingPollOptionId].length){
+                leadingPollOptionId = idx;
             }
         }
-        return leadingPollOption;
+        return leadingPollOptionId;
     }
 
     event votedEvent(uint256 indexed pollId, address voter);
