@@ -4,9 +4,9 @@ pragma solidity ^0.8.19;
 
 import { AggregatorV3Interface } from "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import { PriceConverter } from "./PriceConverter.sol";
+import { EventInterface } from "./eventInterface.sol";
 
-
-contract PollInstance {
+contract PollInstance is EventInterface{
     
     //libs
     using PriceConverter for uint256;
@@ -62,8 +62,9 @@ contract PollInstance {
     function vote(uint256 _pollId) public payable{
         require(msg.value.getConversionRate(s_priceFeed) >= VOTE_PRICE_USD, "didnt send enough eth");
         require(!voters[msg.sender], "You have already voted.");
-        require(_pollId <= pollOptionCount, "Invalid poll option.");
+        require(_pollId < pollOptionCount, "Invalid poll option.");
         pollVoters[_pollId].push(msg.sender);
+        voters[msg.sender] = true;
         voteCount ++;
         emit votedEvent(_pollId, msg.sender);
     }
@@ -97,5 +98,5 @@ contract PollInstance {
         require(managerSuccess, "Manager Call Failed");
     }
 
-    event votedEvent(uint256 indexed pollId, address voter);
+    
 }
