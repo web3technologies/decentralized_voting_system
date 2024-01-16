@@ -5,14 +5,15 @@ The Decentralized Voting System leverages Ethereum blockchain technology to crea
 
 ## Features
 - **Decentralized Voting**: Built on Ethereum for a secure and tamper-proof voting experience.
-- **Voting Manager Contract**: Manages the creation and lifecycle of individual voting instances (`VotingInstance`).
-- **Voting Instances**: Represents distinct votes or polls, each with their own set of candidates and voting logic.
+- **Poll Manager Contract**: Manages the creation and lifecycle of individual voting instances (`VotingInstance`).
+- **Polling Instances**: Represents distinct votes or polls, each with their own set of candidates and voting logic.
 - **Transparency and Anonymity**: Balances transparent voting results with voter privacy.
 - **Versatile Voting Scenarios**: Suitable for a wide range of voting applications.
+- **Reward Mechanism**: After a poll has expired the users that have voted on the winning PollOption will receive a reward. 
 
 ## How It Works
-1. **Voting Manager**: A master contract that deploys and oversees `VotingInstance` contracts.
-2. **Creating Votes**: Authorized users can initiate new voting instances through the Voting Manager.
+1. **Poll Manager**: A master contract that deploys and oversees `VotingInstance` contracts.
+2. **Creating Polls**: Users can initiate new poll instances through the Poll Manager.
 3. **Voting Process**: Voters participate in active polls, casting votes for their preferred options.
 4. **Results**: Vote outcomes are transparently tallied and published.
 
