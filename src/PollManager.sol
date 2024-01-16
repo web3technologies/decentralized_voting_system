@@ -39,13 +39,13 @@ contract PollManager {
         return s_priceFeed.version();
     }
 
-    function createNewPollingInstance(string calldata _pollSubject, uint256 _expirationDate, string[] memory pollOptions) public payable returns (address){
+    function createNewPollingInstance(string calldata _pollSubject, uint256 _expirationDate, string[] memory pollOptions) public payable returns (PollInstance){
         require(msg.value.getConversionRate(s_priceFeed) >= minimumPollCreationUsd, "didnt send enough eth");
         require(pollOptions.length <= 4, "Poll options must not be longer than 4");
-        PollInstance pollingInstance = new PollInstance(s_priceFeed, _pollSubject, _expirationDate, pollOptions, address(this), msg.sender);
+        PollInstance pollingInstance = new PollInstance(s_priceFeed, _pollSubject, _expirationDate, pollOptions, msg.sender, pollingInstanceCount);
         pollingInstances[pollingInstanceCount] = pollingInstance;
         pollingInstanceCount++;
-        return address(pollingInstance);
+        return pollingInstance;
     }
 
 

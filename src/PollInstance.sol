@@ -12,8 +12,9 @@ contract PollInstance {
     using PriceConverter for uint256;
 
     // vars
+    uint256 public pollInstanceId;
     string public voteSubject;
-    uint256 public pollCount;
+    uint256 public pollOptionCount;
     uint256 public voteCount;
 
     // data structures
@@ -35,32 +36,33 @@ contract PollInstance {
     address public immutable i_creatorAddress;
 
     constructor(
-            AggregatorV3Interface _priceFeed, 
+            AggregatorV3Interface _priceFeed,
             string memory _voteSubject, 
             uint256 _expirationDate, 
             string[] memory _pollOptions,
-            address _managerAddress,
-            address _creatorAddress
+            address _creatorAddress,
+            uint256 _pollInstanceId
         ) 
     {
-        voteSubject = _voteSubject;
         s_priceFeed = _priceFeed;
+        voteSubject = _voteSubject;
         i_expirationDate = _expirationDate;
-        i_managerAddress = _managerAddress;
+        i_managerAddress = msg.sender;
         i_creatorAddress = _creatorAddress;
+        pollInstanceId = _pollInstanceId;        
 
         for (uint256 idx = 0; idx < _pollOptions.length; idx++){
             PollOption storage pollOption = pollOptions[idx];
             pollOption.id = idx;
             pollOption.option = _pollOptions[idx];
-            pollCount ++;
+            pollOptionCount ++;
         }
     }
 
     function vote(uint256 _pollId) public payable{
         require(msg.value.getConversionRate(s_priceFeed) >= VOTE_PRICE_USD, "didnt send enough eth");
         require(!voters[msg.sender], "You have already voted.");
-        require(_pollId <= pollCount, "Invalid poll option.");
+        require(_pollId <= pollOptionCount, "Invalid poll option.");
         pollVoters[_pollId].push(msg.sender);
         voteCount ++;
         emit votedEvent(_pollId, msg.sender);
@@ -68,7 +70,7 @@ contract PollInstance {
 
     function getLeadingPollId() public view returns(uint256){
         uint256 leadingPollOptionId = 0;
-        for (uint256 idx = 1; idx < pollCount; idx++){
+        for (uint256 idx = 1; idx < pollOptionCount; idx++){
             if (pollVoters[idx].length > pollVoters[leadingPollOptionId].length){
                 leadingPollOptionId = idx;
             }
