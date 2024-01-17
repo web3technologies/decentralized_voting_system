@@ -17,18 +17,44 @@ contract PollInstanceTest is Test, EventInterface {
     string[] pollOptions = ["blue", "green", "red"];
     uint256 expirationDate = 1;
 
-    address USER = makeAddr("user");
+    address[] users;
+    address USER;
+
+    function uintToString(uint256 _value) internal pure returns (string memory) {
+        if (_value == 0) {
+            return "0";
+        }
+        uint256 temp = _value;
+        uint256 digits;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        bytes memory buffer = new bytes(digits);
+        while (_value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + _value % 10));
+            _value /= 10;
+        }
+        return string(buffer);
+    }
 
     function setUp() external {
         DeployPollManager deployPollManager = new DeployPollManager();
         pollManager = deployPollManager.run();
-        vm.deal(USER, 10 ether);
+        for (uint256 idx=0; idx < 5; idx++){
+            address user = makeAddr(uintToString(idx)); 
+            users.push(user);
+            vm.deal(user, 10 ether);
+        }
+        USER = users[0];
         vm.prank(USER);
         pollInstance = pollManager.createNewPollingInstance{value: .01 ether}(
             testSubject,
             expirationDate,
             pollOptions
         );
+        
     }
     
     // test to ensure the subject is properly set
@@ -100,5 +126,30 @@ contract PollInstanceTest is Test, EventInterface {
         vm.expectRevert();
         pollInstance.vote{value: .01 ether}(invalidVoteOptionId);
     }
+
+    function __perform_vote() private{
+        for (uint256 idx; idx < users.length; idx++){
+                vm.prank(users[idx]);
+                uint256 voteNumber;
+                if(idx % 2 == 0){
+                    voteNumber = 0;
+                }else{
+                    voteNumber = 1;
+                }
+                pollInstance.vote{value: .01 ether}(voteNumber);
+            }
+    }
+
+    function testGetLeadingPollId() public{
+        __perform_vote();
+        uint256 leadingPollId = pollInstance.getLeadingPollId();
+        assertEq(leadingPollId, 0);
+    }
+
+    // function testPayoutWinners() public{
+    //       __perform_vote();
+    //       pollInstance.payoutWinners();
+    //       uint256 leadingPollId = pollInstance.getLeadingPollId();
+    // }
 
 }
