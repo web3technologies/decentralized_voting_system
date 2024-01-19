@@ -24,6 +24,7 @@ contract PollManager {
 
     // data structures
     mapping(uint256 => PollInstance) public pollingInstances;
+    mapping(string => PollInstance) public pollingInstancesBySubject;
     
     // constants
     AggregatorV3Interface private s_priceFeed;
@@ -44,6 +45,7 @@ contract PollManager {
         require(pollOptions.length <= 4, "Poll options must not be longer than 4");
         PollInstance pollingInstance = new PollInstance(s_priceFeed, _pollSubject, _expirationDate, pollOptions, msg.sender, pollingInstanceCount);
         pollingInstances[pollingInstanceCount] = pollingInstance;
+        pollingInstancesBySubject[_pollSubject] = pollingInstance;
         pollingInstanceCount++;
         return pollingInstance;
     }
